@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.david.copyright.mapper.SaleMapper">
+    <select id="getSalePageList" parameterType="com.david.copyright.dto.SalesQueryDto" resultType="com.david.copyright.vo.SaleVo">
+        SELECT <include refid="Sale_List"/> FROM works
+        LEFT JOIN sale ON works.id=sale.workid
+        WHERE sale.status!=0 and sale.status!=3
+        <if test="salesQueryDto.content != null">
+            AND sale.title like concat('%',#{salesQueryDto.content},'%')
+        </if>
+
+        <if test="salesQueryDto.workType != null">
+            AND works.type = #{salesQueryDto.workType}
+        </if>
+
+        <if test="salesQueryDto.status != null">
+            AND sale.status = #{salesQueryDto.status}
+        </if>
+
+        <if test="salesQueryDto.sortType != null and salesQueryDto.sortType==1" >
+            order by sale.price desc
+        </if>
+
+        <if test="salesQueryDto.sortType != null and salesQueryDto.sortType==2" >
+            order by sale.price
+        </if>
+
+        <if test="salesQueryDto.sortType != null and salesQueryDto.sortType==3" >
+            order by sale.downloads desc
+        </if>
+
+        <if test="salesQueryDto.sortType != null and salesQueryDto.sortType==4" >
+            order by sale.downloads
+        </if>
+    </select>
+
+
+    <sql id="Sale_List">
+        works.id AS workid,works.type AS type,sale.sid AS sid,sale.status AS status,sale.price AS price,sale.description AS description,
+        sale.downloads AS downloads,sale.title AS title
+    </sql>
+
+
+    <sql id="Column_List">
+        works.id,works.workname,works.userid,works.type,works.introduction,works.filelocation,works.ispublished,works.completiontime,works.completionlocation,
+        works.isauthor,works.isproof,works.createtime,works.filename,works.filedownloadurl,works.authorname,works.authoridnumber,works.filehash,works.chainhash,
+        works.publishedtime,works.publishedlocation,works.copyrightownername,works.copyrightownerid,works.copyrightownertype,works.idtype,works.workuri,works.isauthority,
+        works.chaintime,works.blockheight,works.certificatefilelocation,sale.sid AS sid,sale.workid AS workid,sale.status AS status,sale.price AS price,sale.description AS description,
+        sale.downloads AS downloads,sale.title AS title
+    </sql>
+</mapper>

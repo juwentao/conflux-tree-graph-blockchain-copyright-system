@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.david.copyright.mapper.CommentMapper">
+    <select id="getCommentList" parameterType="com.david.copyright.dto.CommentQueryDto" resultType="com.david.copyright.vo.CommentVo">
+        SELECT <include refid="Comment_List"/> FROM user
+        LEFT JOIN comment ON user.id=comment.userid
+        WHERE comment.saleid=#{commentQueryDto.saleid}
+
+    </select>
+
+    <sql id="Comment_List">
+        comment.id AS id,comment.saleid AS saleid,comment.date ,comment.content AS content,comment.userid AS userid,user.username AS username
+    </sql>
+</mapper>
